@@ -1,1825 +1,1632 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro de Clientes - Óticas Prismax</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    :root {
-      --primary-color: #0066cc;
-      --secondary-color: #004d99;
-      --danger-color: #dc3545;
-      --success-color: #28a745;
-      --info-color: #17a2b8;
-      --warning-color: #ffc107;
-      --light-gray: #f8f9fa;
-      --dark-gray: #343a40;
-      --white: #ffffff;
-      --dark-blue: #003366;
-      --whatsapp-color: #25D366;
-      --exam-color: #6f42c1;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--light-gray);
-      line-height: 1.6;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    
-    .header {
-      background: var(--white);
-      padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      border-bottom: 3px solid var(--primary-color);
-    }
-    
-    .logo-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-    
-    .logo {
-      height: 60px;
-    }
-    
-    .brand-name {
-      color: var(--dark-blue);
-      font-size: 24px;
-      font-weight: 700;
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      flex: 1;
-    }
-    
-    .main-title {
-      text-align: center;
-      color: var(--dark-blue);
-      margin: 25px 0;
-      font-size: 28px;
-      position: relative;
-    }
-    
-    .main-title::after {
-      content: '';
-      display: block;
-      width: 80px;
-      height: 3px;
-      background: var(--primary-color);
-      margin: 10px auto;
-    }
-    
-    .card {
-      background: var(--white);
-      padding: 25px;
-      border-radius: 8px;
-      margin: 20px auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.05);
-      border: 1px solid #e0e0e0;
-    }
-    
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-    }
-    
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: all 0.3s;
-    }
-    
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
-    }
-    
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-    
-    .btn-danger {
-      background-color: var(--danger-color);
-      color: white;
-    }
-    
-    .btn-danger:hover {
-      background-color: #c82333;
-      transform: translateY(-2px);
-    }
-    
-    .btn-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background-color: #218838;
-      transform: translateY(-2px);
-    }
-    
-    .btn-info {
-      background-color: var(--info-color);
-      color: white;
-    }
-    
-    .btn-info:hover {
-      background-color: #138496;
-      transform: translateY(-2px);
-    }
-    
-    .btn-warning {
-      background-color: var(--warning-color);
-      color: #212529;
-    }
-    
-    .btn-warning:hover {
-      background-color: #e0a800;
-      transform: translateY(-2px);
-    }
-    
-    .btn-whatsapp {
-      background-color: var(--whatsapp-color);
-      color: white;
-    }
-    
-    .btn-whatsapp:hover {
-      background-color: #128C7E;
-      transform: translateY(-2px);
-    }
-    
-    .btn-exam {
-      background-color: var(--exam-color);
-      color: white;
-    }
-    
-    .btn-exam:hover {
-      background-color: #5a32a3;
-      transform: translateY(-2px);
-    }
-    
-    .btn-group {
-      display: flex;
-      gap: 15px;
-      margin-top: 25px;
-      flex-wrap: wrap;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 30px auto;
-      background: var(--white);
-      box-shadow: 0 0 15px rgba(0,0,0,0.05);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    
-    th {
-      background-color: var(--primary-color);
-      color: white;
-      font-weight: 600;
-    }
-    
-    tr:hover {
-      background-color: #f5f5f5;
-    }
-    
-    .detalhes {
-      display: none;
-    }
-    
-    .parcela {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #eee;
-      background: #f9f9f9;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-    
-    .parcela:last-child {
-      border-bottom: none;
-    }
-    
-    .status-paga {
-      color: var(--success-color);
-      font-weight: bold;
-    }
-    
-    .status-aberta {
-      color: var(--danger-color);
-      font-weight: bold;
-    }
-    
-    .status-vencida {
-      color: var(--warning-color);
-      font-weight: bold;
-    }
-    
-    .search-container {
-      margin: 25px 0;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
-      align-items: center;
-    }
-    
-    .search-container input {
-      flex: 1;
-      min-width: 250px;
-      padding: 12px;
-    }
-    
-    .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 25px;
-      background-color: var(--success-color);
-      color: white;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transform: translateX(200%);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .toast.show {
-      transform: translateX(0);
-    }
-    
-    .toast-icon {
-      font-size: 20px;
-    }
-    
-    .footer {
-      background-color: var(--dark-gray);
-      color: white;
-      padding: 40px 0 20px;
-      margin-top: 40px;
-    }
-    
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-    
-    .footer-section h4 {
-      color: var(--white);
-      margin-bottom: 15px;
-      font-size: 18px;
-      position: relative;
-      padding-bottom: 10px;
-    }
-    
-    .footer-section h4::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 40px;
-      height: 2px;
-      background: var(--primary-color);
-    }
-    
-    .footer-section p {
-      margin: 8px 0;
-      color: #bbb;
-    }
-    
-    .footer-bottom {
-      text-align: center;
-      padding-top: 20px;
-      border-top: 1px solid #444;
-      color: #999;
-      font-size: 14px;
-    }
-    
-    .no-data {
-      text-align: center;
-      padding: 30px;
-      color: #777;
-    }
-    
-    .cep-search {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .cep-search button {
-      padding: 12px;
-      min-width: 50px;
-    }
-    
-    .whatsapp-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    
-    .whatsapp-check input {
-      width: auto;
-    }
-    
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 20px;
-    }
-    
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      border-bottom: none;
-      border-radius: 4px 4px 0 0;
-      margin-right: 5px;
-      background-color: #f1f1f1;
-    }
-    
-    .tab.active {
-      background-color: var(--white);
-      border-color: #ddd;
-      border-bottom-color: var(--white);
-      font-weight: bold;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .ficha {
-      background-color: var(--white);
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    
-    .ficha-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-    
-    .ficha-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: var(--primary-color);
-    }
-    
-    .ficha-date {
-      color: #777;
-    }
-    
-    .ficha-body {
-      margin-bottom: 15px;
-    }
-    
-    .ficha-footer {
-      border-top: 1px solid #eee;
-      padding-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-    
-    .exam-status {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    
-    .status-agendado {
-      background-color: var(--info-color);
-      color: white;
-    }
-    
-    .status-concluido {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .status-cancelado {
-      background-color: var(--danger-color);
-      color: white;
-    }
-    
-    .status-reembolsado {
-      background-color: var(--exam-color);
-      color: white;
-    }
-    
-    .status-vencido {
-      background-color: var(--warning-color);
-      color: #212529;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .modal-content {
-      background-color: var(--white);
-      padding: 25px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
-    @media (max-width: 768px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      table {
-        display: block;
-        overflow-x: auto;
-      }
-      
-      .btn-group {
-        flex-direction: column;
-      }
-      
-      .actions {
-        flex-direction: column;
-      }
-      
-      .logo-container {
-        flex-direction: column;
-        text-align: center;
-      }
-      
-      .brand-name {
-        margin-top: 10px;
-      }
-      
-      .main-title {
-        font-size: 24px;
-      }
-      
-      .cep-search {
-        flex-direction: column;
-      }
-      
-      .cep-search button {
-        width: 100%;
-      }
-      
-      .tabs {
-        flex-direction: column;
-        border-bottom: none;
-      }
-      
-      .tab {
-        border-radius: 0;
-        border: 1px solid #ddd;
-        margin-bottom: 5px;
-      }
-      
-      .tab.active {
-        border-bottom: 1px solid #ddd;
-      }
-      
-      .modal-content {
-        width: 95%;
-        padding: 15px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Express - Soluções Ópticas Expressas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-gray: #2c3e50;
+            --medium-gray: #34495e;
+            --light-gray: #ecf0f1;
+            --blue: #3498db;
+            --dark-blue: #2980b9;
+            --yellow: #f1c40f;
+            --orange: #e67e22;
+            --purple: #9b59b6;
+            --white: #ffffff;
+            --black: #1a252f;
+            --green: #2ecc71;
+            --whatsapp: #25D366;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #f9f9f9;
+        }
+        
+        /* Header Animalizado */
+        header {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 0 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        header.scrolled {
+            height: 70px;
+            background-color: rgba(44, 62, 80, 0.97);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            transition: var(--transition);
+        }
+        
+        .logo-img {
+            height: 60px;
+            margin-right: 65px;
+            transition: var(--transition);
+        }
+        
+        .logo-text {
+            font-size: 29px;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .logo-text span {
+            color: var(--blue);
+            font-weight: 700;
+            margin-left: 5px;
+        }
+        
+        /* Menu e Botões */
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 8px;
+            position: relative;
+        }
+        
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 18px;
+            border-radius: 30px;
+            transition: var(--transition);
+            display: block;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover::before {
+            left: 100%;
+        }
+        
+        nav ul li a.active, nav ul li a:hover {
+            background-color: var(--black);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .login-btn {
+            background-color: var(--blue);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(41, 128, 185, 0.4);
+            margin-left: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+        
+        .login-btn:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.6);
+        }
+        
+        .login-btn:hover::after {
+            transform: translateX(100%);
+        }
+        
+        .login-btn i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: var(--transition);
+        }
+        
+        .mobile-menu-btn:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* Hero Section Animalizada */
+        .hero {
+            height: 100vh;
+            min-height: 800px;
+            background: linear-gradient(135deg, var(--medium-gray), var(--dark-gray));
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rocket-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rocket {
+            width: 450px;
+            height: 450px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="white" d="M50,10 L60,40 L70,30 L50,10 Z M30,30 L40,40 L50,10 L30,30 Z M70,30 L60,40 L80,50 L70,30 Z M40,40 L30,30 L20,50 L40,40 Z M60,40 L40,40 L50,60 L60,40 Z M80,50 L60,40 L50,60 L80,50 Z M20,50 L40,40 L50,60 L20,50 Z M50,60 L40,70 L60,70 L50,60 Z"/></svg>') no-repeat center center;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 20px rgba(52, 152, 219, 0.7));
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: scale(0.95);
+            padding: 0 20px;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .slide h1 {
+            font-size: clamp(36px, 6vw, 82px);
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+        
+        .highlight {
+            background-color: rgba(52, 152, 219, 0.7);
+            padding: 8px 25px;
+            border-radius: 30px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: skewX(-10deg);
+            transition: var(--transition);
+        }
+        
+        .highlight:hover {
+            transform: skewX(-10deg) scale(1.05);
+            background-color: rgba(41, 128, 185, 0.8);
+        }
+        
+        .carousel-controls {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+        }
+        
+        .carousel-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            z-index: 10;
+        }
+        
+        .carousel-dot {
+            width: 16px;
+            height: 16px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-dot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            transition: var(--transition);
+        }
+        
+        .carousel-dot.active {
+            transform: scale(1.3);
+        }
+        
+        .carousel-dot.active::after {
+            left: 0;
+        }
+        
+        /* Seção de Destaques Animalizada */
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .highlight-card {
+            padding: 80px 30px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 3;
+        }
+        
+        .highlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+            z-index: 1;
+        }
+        
+        .highlight-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--white);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+        
+        .highlight-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .highlight-card:nth-child(1) {
+            background-color: var(--dark-blue);
+        }
+        
+        .highlight-card:nth-child(2) {
+            background-color: var(--medium-gray);
+        }
+        
+        .highlight-card:nth-child(3) {
+            background-color: var(--yellow);
+        }
+        
+        .highlight-card:nth-child(4) {
+            background-color: var(--orange);
+        }
+        
+        .highlight-card-content {
+            position: relative;
+            z-index: 2;
+            transform: translateZ(30px);
+        }
+        
+        .highlight-card .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .highlight-card:hover .logo {
+            transform: rotate(15deg) scale(1.2);
+        }
+        
+        .highlight-card h2 {
+            font-size: 32px;
+            margin: 20px 0;
+            font-weight: 800;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .highlight-card p {
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        /* Seções de Conteúdo */
+        .content-section {
+            padding: 120px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .content-section:nth-child(odd) {
+            background-color: var(--white);
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 40px;
+            color: var(--dark-gray);
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--blue);
+            border-radius: 2px;
+        }
+        
+        .section-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--medium-gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Seção CTA Animalizada */
+        .cta-section {
+            background-color: var(--dark-gray);
+            padding: 150px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="white" d="M50,10 L60,40 L70,30 L50,10 Z M30,30 L40,40 L50,10 L30,30 Z M70,30 L60,40 L80,50 L70,30 Z M40,40 L30,30 L20,50 L40,40 Z M60,40 L40,40 L50,60 L60,40 Z M80,50 L60,40 L50,60 L80,50 Z M20,50 L40,40 L50,60 L20,50 Z M50,60 L40,70 L60,70 L50,60 Z"/></svg>') no-repeat center center;
+            background-size: 500px;
+            opacity: 0.03;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-section h2 {
+            font-size: clamp(36px, 6vw, 60px);
+            color: var(--white);
+            margin-bottom: 40px;
+            font-weight: 900;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .shield-container {
+            position: relative;
+            display: inline-block;
+            margin: 40px 0;
+        }
+        
+        .shield-icon {
+            font-size: 100px;
+            color: var(--green);
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5));
+        }
+        
+        .shield-pulse {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(46, 204, 113, 0.3);
+            animation: pulse 2s infinite;
+            z-index: 1;
+        }
+        
+        .cta-section p {
+            font-size: clamp(24px, 3vw, 32px);
+            color: var(--white);
+            margin-bottom: 50px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .cta-btn {
+            background-color: var(--green);
+            color: var(--white);
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 20px;
+            transition: var(--transition);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: var(--transition);
+        }
+        
+        .cta-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(46, 204, 113, 0.6);
+        }
+        
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Footer Animalizado */
+        footer {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 80px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--blue), var(--green), var(--yellow), var(--orange));
+        }
+        
+        .locations {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .location {
+            font-size: 18px;
+            color: var(--light-gray);
+            position: relative;
+            padding: 0 20px;
+            font-weight: 500;
+        }
+        
+        .location:not(:last-child)::after {
+            content: '•';
+            position: absolute;
+            right: -20px;
+            color: var(--blue);
+            font-weight: bold;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 20px;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        /* Widget de Chat Animalizado */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--purple);
+            color: var(--white);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.5);
+            transition: var(--transition);
+            z-index: 999;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        .chat-widget:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 15px 40px rgba(155, 89, 182, 0.7);
+            animation: none;
+        }
+        
+        .chat-widget i {
+            font-size: 32px;
+        }
+        
+        .chat-text {
+            position: absolute;
+            right: 90px;
+            background-color: var(--purple);
+            padding: 15px 25px;
+            border-radius: 30px 30px 0 30px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chat-widget:hover .chat-text {
+            opacity: 1;
+            right: 80px;
+        }
+        
+        /* Botão do WhatsApp */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 130px;
+            right: 30px;
+            background-color: var(--whatsapp);
+            color: var(--white);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+            transition: var(--transition);
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.7);
+            animation: none;
+        }
+        
+        .whatsapp-btn i {
+            font-size: 36px;
+        }
+        
+        .whatsapp-text {
+            position: absolute;
+            right: 90px;
+            background-color: var(--whatsapp);
+            padding: 15px 25px;
+            border-radius: 30px 30px 0 30px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .whatsapp-btn:hover .whatsapp-text {
+            opacity: 1;
+            right: 80px;
+        }
+        
+        /* Atendente Virtual */
+        .virtual-assistant {
+            position: fixed;
+            bottom: 230px;
+            right: 30px;
+            width: 350px;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        
+        .virtual-assistant.active {
+            transform: translateX(0);
+        }
+        
+        .assistant-header {
+            background-color: var(--blue);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .assistant-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .assistant-header h3 i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .close-assistant {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-assistant:hover {
+            transform: rotate(90deg);
+        }
+        
+        .assistant-body {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        
+        .assistant-message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .assistant-message.bot {
+            align-items: flex-start;
+        }
+        
+        .assistant-message.user {
+            align-items: flex-end;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            margin-bottom: 5px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .bot .message-bubble {
+            background-color: var(--light-gray);
+            color: var(--black);
+            border-top-left-radius: 5px;
+        }
+        
+        .user .message-bubble {
+            background-color: var(--blue);
+            color: var(--white);
+            border-top-right-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: var(--medium-gray);
+        }
+        
+        .assistant-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .assistant-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 30px;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+        
+        .assistant-input input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .send-message {
+            background-color: var(--blue);
+            color: var(--white);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-message:hover {
+            background-color: var(--dark-blue);
+            transform: rotate(15deg);
+        }
+        
+        /* Animações */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .virtual-assistant {
+                width: 300px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark-gray);
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                z-index: 999;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            
+            nav ul li a {
+                padding: 15px;
+                border-radius: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .login-btn {
+                margin-left: auto;
+            }
+            
+            .rocket {
+                width: 350px;
+                height: 350px;
+            }
+            
+            .virtual-assistant {
+                bottom: 200px;
+            }
+            
+            .whatsapp-btn {
+                bottom: 100px;
+            }
+            
+            .chat-widget {
+                bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .logo-img {
+                height: 40px;
+            }
+            
+            .hero {
+                min-height: 700px;
+            }
+            
+            .rocket {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .carousel-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .highlight-card {
+                padding: 60px 20px;
+            }
+            
+            .virtual-assistant {
+                width: 280px;
+                bottom: 180px;
+                right: 20px;
+            }
+            
+            .whatsapp-btn {
+                right: 20px;
+                width: 70px;
+                height: 70px;
+                bottom: 90px;
+            }
+            
+            .whatsapp-btn i {
+                font-size: 30px;
+            }
+            
+            .chat-widget {
+                right: 20px;
+                width: 70px;
+                height: 70px;
+            }
+            
+            .chat-widget i {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            header {
+                padding: 0 15px;
+                height: 70px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .logo-img {
+                height: 35px;
+                margin-right: 10px;
+            }
+            
+            .hero {
+                margin-top: 70px;
+                min-height: 600px;
+            }
+            
+            .rocket {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .slide h1 {
+                font-size: 32px;
+            }
+            
+            .highlight {
+                padding: 6px 15px;
+            }
+            
+            .highlights {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-section, .cta-section {
+                padding: 80px 20px;
+            }
+            
+            .shield-icon {
+                font-size: 80px;
+            }
+            
+            .virtual-assistant {
+                width: 90%;
+                right: 5%;
+                bottom: 160px;
+            }
+            
+            .whatsapp-btn {
+                bottom: 80px;
+                right: 15px;
+                width: 60px;
+                height: 60px;
+            }
+            
+            .whatsapp-btn i {
+                font-size: 26px;
+            }
+            
+            .chat-widget {
+                right: 15px;
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+            }
+            
+            .chat-widget i {
+                font-size: 24px;
+            }
+            
+            .location:not(:last-child)::after {
+                display: none;
+            }
+            
+            .locations {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- Header com Logo -->
-<header class="header">
-  <div class="container">
-    <div class="logo-container">
-      <img src="db8c5a61-2945-4267-8d14-09894bbe08ad.png" alt="Óticas Prismax" class="logo">
-      <span class="brand-name">Óticas Prismax</span>
-    </div>
-  </div>
-</header>
-
-<div class="container">
-  <h1 class="main-title">Sistema de Clientes</h1>
-
-  <!-- Abas do Sistema -->
-  <div class="tabs">
-    <div class="tab active" onclick="abrirAba('cadastro')">Cadastro</div>
-    <div class="tab" onclick="abrirAba('compras')">Fichas de Compra</div>
-    <div class="tab" onclick="abrirAba('exames')">Marcação de Exames</div>
-  </div>
-
-  <!-- Aba de Cadastro -->
-  <div id="cadastro" class="tab-content active">
-    <!-- Formulário de Cadastro -->
-    <form id="cadastroForm" class="card">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="nome">Nome:</label>
-          <input id="nome" name="nome" required>
+    <!-- Header Animalizado -->
+    <header id="main-header">
+        <div class="logo-container">
+            <!-- Logo da marca - substitua pelo seu arquivo de logo -->
+            <img src="LOGO.avif" alt="Lab Express Logo" class="logo-img">
+            <a href="#" class="logo-text">LAB<span>EXPRESS</span></a>
         </div>
         
-        <div class="form-group">
-          <label for="cpf">CPF:</label>
-          <input id="cpf" name="cpf" required oninput="formatarCPF(this)">
-        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
         
-        <div class="form-group">
-          <label for="telefone">Telefone:</label>
-          <input id="telefone" name="telefone" oninput="formatarTelefone(this)">
-        </div>
-        
-        <div class="form-group">
-          <label for="whatsapp">WhatsApp:</label>
-          <input id="whatsapp" name="whatsapp" oninput="formatarTelefone(this)">
-          <div class="whatsapp-check">
-            <input type="checkbox" id="notificarWhatsapp" name="notificarWhatsapp">
-            <label for="notificarWhatsapp">Enviar notificações por WhatsApp</label>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="cep">CEP:</label>
-          <div class="cep-search">
-            <input id="cep" name="cep" oninput="formatarCEP(this)" maxlength="9">
-            <button type="button" class="btn-info" onclick="buscarCEP()"><i class="fas fa-search"></i></button>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="rua">Rua:</label>
-          <input id="rua" name="rua">
-        </div>
-        
-        <div class="form-group">
-          <label for="numero">Número:</label>
-          <input id="numero" name="numero">
-        </div>
-        
-        <div class="form-group">
-          <label for="bairro">Bairro:</label>
-          <input id="bairro" name="bairro">
-        </div>
-        
-        <div class="form-group">
-          <label for="cidade">Cidade:</label>
-          <input id="cidade" name="cidade">
-        </div>
-        
-        <div class="form-group">
-          <label for="uf">Estado:</label>
-          <input id="uf" name="uf" maxlength="2" style="text-transform: uppercase;">
-        </div>
-        
-        <div class="form-group">
-          <label for="referencia">Referência:</label>
-          <input id="referencia" name="referencia">
-        </div>
-        
-        <div class="form-group">
-          <label for="entrada">Entrada (R$):</label>
-          <input id="entrada" type="number" name="entrada" step="0.01" min="0" onchange="calcularTotal()">
-        </div>
-        
-        <div class="form-group">
-          <label for="parcelas">Quantidade de Parcelas:</label>
-          <input id="parcelas" type="number" name="parcelas" min="0" onchange="calcularTotal()">
-        </div>
-        
-        <div class="form-group">
-          <label for="valorParcela">Valor Parcela (R$):</label>
-          <input id="valorParcela" type="number" name="valorParcela" step="0.01" min="0" onchange="calcularTotal()">
-        </div>
-        
-        <div class="form-group">
-          <label for="primeiraParcela">Vencimento 1ª Parcela:</label>
-          <input id="primeiraParcela" type="date" name="primeiraParcela">
-        </div>
-        
-        <div class="form-group">
-          <label for="total">Total (R$):</label>
-          <input id="total" type="number" name="total" step="0.01" min="0" readonly>
-        </div>
-        
-        <div class="form-group">
-          <label for="dataEntrega">Data de Entrega:</label>
-          <input id="dataEntrega" type="date" name="dataEntrega">
-        </div>
-        
-        <div class="form-group">
-          <label for="assinatura">Assinatura:</label>
-          <input id="assinatura" name="assinatura">
-        </div>
-      </div>
-      
-      <div class="btn-group">
-        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Cliente</button>
-        <button type="reset" class="btn-danger"><i class="fas fa-times"></i> Limpar Formulário</button>
-      </div>
-    </form>
-
-    <!-- Lista de Clientes -->
-    <div class="card">
-      <h2 class="main-title">Clientes Cadastrados</h2>
-      
-      <div class="search-container">
-        <input type="text" id="buscaCliente" placeholder="Buscar por nome, CPF ou telefone..." oninput="filtrarClientes()">
-        <div class="btn-group">
-          <button onclick="exportarExcel()" class="btn-success"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-          <button onclick="exportarPDF()" class="btn-info"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-        </div>
-      </div>
-
-      <table id="tabelaClientes">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th>Telefone</th>
-            <th>Total</th>
-            <th>Entrega</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- Detalhes das Parcelas -->
-    <div class="detalhes card" id="detalhesCliente">
-      <h3>Parcelas de <span id="clienteSelecionado"></span></h3>
-      <div id="listaParcelas"></div>
-      <div class="btn-group">
-        <button onclick="salvarParcelas()" class="btn-primary"><i class="fas fa-save"></i> Salvar Parcelas</button>
-        <button onclick="notificarCliente()" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Notificar Cliente</button>
-        <button onclick="exportarClientePDF(clienteIndexAtual)" class="btn-info"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-        <button onclick="exportarClienteExcel(clienteIndexAtual)" class="btn-success"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-        <button onclick="fecharDetalhes()" class="btn-danger"><i class="fas fa-times"></i> Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Aba de Fichas de Compra -->
-  <div id="compras" class="tab-content">
-    <div class="card">
-      <h2 class="main-title">Fichas de Compra</h2>
-      
-      <div class="search-container">
-        <input type="text" id="buscaCompras" placeholder="Buscar por nome, CPF ou telefone..." oninput="filtrarCompras()">
-      </div>
-
-      <div id="listaCompras"></div>
-    </div>
-  </div>
-
-  <!-- Aba de Marcação de Exames -->
-  <div id="exames" class="tab-content">
-    <div class="card">
-      <h2 class="main-title">Marcação de Exames</h2>
-      
-      <div class="search-container">
-        <input type="text" id="buscaExames" placeholder="Buscar por nome, CPF ou telefone..." oninput="filtrarExames()">
-        <button onclick="abrirModalExame()" class="btn-exam"><i class="fas fa-plus"></i> Novo Exame</button>
-      </div>
-
-      <div id="listaExames"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal para Adicionar/Editar Exame -->
-<div class="modal" id="modalExame">
-  <div class="modal-content">
-    <h3 id="modalExameTitulo">Novo Exame</h3>
+        <nav>
+            <ul id="main-nav">
+                <li><a href="#" class="active">INÍCIO</a></li>
+                <li><a href="#logistica">LOGÍSTICA</a></li>
+                <li><a href="#produtos">PRODUTOS</a></li>
+                <li><a href="#quem-somos">QUEM SOMOS</a></li>
+                <li><a href="#contato">CONTATO</a></li>
+            </ul>
+        </nav>
+        <button class="login-btn">
+            <i class="fas fa-user"></i> Login
+        </button>
+    </header>
     
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="exameCliente">Cliente:</label>
-        <select id="exameCliente" required>
-          <option value="">Selecione um cliente</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="exameTipo">Tipo de Exame:</label>
-        <select id="exameTipo" required>
-          <option value="">Selecione o tipo</option>
-          <option value="Consulta Oftalmológica">Consulta Oftalmológica</option>
-          <option value="Exame de Refração">Exame de Refração</option>
-          <option value="Mapeamento de Retina">Mapeamento de Retina</option>
-          <option value="Tonometria">Tonometria</option>
-          <option value="Topografia Corneana">Topografia Corneana</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="exameData">Data do Exame:</label>
-        <input id="exameData" type="datetime-local" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="exameValor">Valor (R$):</label>
-        <input id="exameValor" type="number" step="0.01" min="0" value="10.00" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="exameObservacoes">Observações:</label>
-        <textarea id="exameObservacoes" rows="3"></textarea>
-      </div>
-      
-      <div class="form-group">
-        <label>Status:</label>
-        <div style="display: flex; gap: 15px;">
-          <label><input type="radio" name="exameStatus" value="Agendado" checked> Agendado</label>
-          <label><input type="radio" name="exameStatus" value="Concluído"> Concluído</label>
-          <label><input type="radio" name="exameStatus" value="Cancelado"> Cancelado</label>
+    <!-- Hero Section Animalizada -->
+    <section class="hero">
+        <div class="rocket-container">
+            <div class="rocket"></div>
         </div>
-      </div>
-      
-      <div class="form-group" id="reembolsoGroup" style="display: none;">
-        <label for="exameReembolso">Reembolso:</label>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <select id="exameReembolso">
-            <option value="Pendente">Pendente</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Vencido">Vencido</option>
-          </select>
-          <input type="date" id="exameDataReembolso">
+        
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <h1>
+                VENDA<br>
+                <span class="highlight">EXPERIÊNCIA</span><br>
+                SEJA<br>
+                <span class="highlight">EXPRESS</span>
+            </h1>
         </div>
-      </div>
-    </div>
-    
-    <div class="btn-group">
-      <button onclick="salvarExame()" class="btn-primary"><i class="fas fa-save"></i> Salvar</button>
-      <button onclick="fecharModalExame()" class="btn-danger"><i class="fas fa-times"></i> Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Rodapé -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4>Óticas Prismax</h4>
-        <p>Quadra 27, 69 A João Paulo ll Juazeiro  Bahia- Centro</p>
-        <p>CEP: 48914-056</p>
-      </div>
-      <div class="footer-section">
-        <h4>Contato</h4>
-        <p>(55) 7498149-7613</p>
-        <p>oticaprismax@gmail.com</p>
-      </div>
-      <div class="footer-section">
-        <h4>Horário de Funcionamento</h4>
-        <p>Segunda a Sexta: 9h às 18h</p>
-        <p>Sábado: 9h às 13h</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; <span id="current-year"></span> Óticas Prismax - Todos os direitos reservados</p>
-    </div>
-  </div>
-</footer>
-
-<!-- Toast Notification -->
-<div class="toast" id="toast">
-  <span class="toast-icon">✓</span>
-  <span id="toast-message"></span>
-</div>
-
-<script>
-  // Inicializa o jsPDF
-  const { jsPDF } = window.jspdf;
-  
-  // Elementos DOM
-  const form = document.getElementById('cadastroForm');
-  const tabela = document.querySelector('#tabelaClientes tbody');
-  const detalhes = document.getElementById('detalhesCliente');
-  const listaParcelas = document.getElementById('listaParcelas');
-  const clienteSelecionado = document.getElementById('clienteSelecionado');
-  const toast = document.getElementById('toast');
-  const toastMessage = document.getElementById('toast-message');
-  const currentYear = document.getElementById('current-year');
-  const listaCompras = document.getElementById('listaCompras');
-  const listaExames = document.getElementById('listaExames');
-  const modalExame = document.getElementById('modalExame');
-  
-  // Variáveis
-  let clienteIndexAtual = null;
-  let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-  let exames = JSON.parse(localStorage.getItem('exames')) || [];
-  let exameEditando = null;
-
-  // Inicialização
-  window.onload = function() {
-    carregarTabela();
-    carregarCompras();
-    carregarExames();
-    document.getElementById('dataEntrega').valueAsDate = new Date();
-    document.getElementById('primeiraParcela').valueAsDate = new Date();
-    currentYear.textContent = new Date().getFullYear();
-    
-    // Configurar eventos de status do exame
-    document.querySelectorAll('input[name="exameStatus"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        document.getElementById('reembolsoGroup').style.display = 
-          this.value === 'Cancelado' ? 'block' : 'none';
-      });
-    });
-  };
-
-  // Alternar entre abas
-  function abrirAba(abaId) {
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.tab-content').forEach(content => {
-      content.classList.remove('active');
-    });
-    
-    document.querySelector(`.tab[onclick="abrirAba('${abaId}')"]`).classList.add('active');
-    document.getElementById(abaId).classList.add('active');
-  }
-
-  // Evento de submit do formulário
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const dados = Object.fromEntries(new FormData(form).entries());
-    
-    // Validações
-    if (!dados.nome || !dados.cpf) {
-      mostrarToast('Nome e CPF são obrigatórios!', 'error');
-      return;
-    }
-    
-    const qtdParcelas = parseInt(dados.parcelas) || 0;
-    const valorParcela = parseFloat(dados.valorParcela) || 0;
-    const primeiraParcela = dados.primeiraParcela ? new Date(dados.primeiraParcela) : new Date();
-
-    // Criar array de parcelas
-    dados.parcelasDetalhes = [];
-    for (let i = 1; i <= qtdParcelas; i++) {
-      const dataVencimento = new Date(primeiraParcela);
-      dataVencimento.setMonth(dataVencimento.getMonth() + (i - 1));
-      
-      dados.parcelasDetalhes.push({
-        numero: i,
-        valor: valorParcela,
-        status: "Em aberto",
-        dataVencimento: dataVencimento.toISOString().split('T')[0],
-        dataPagamento: null
-      });
-    }
-
-    // Adicionar cliente
-    clientes.push(dados);
-    localStorage.setItem('clientes', JSON.stringify(clientes));
-    
-    mostrarToast('Cliente salvo com sucesso!', 'success');
-    form.reset();
-    carregarTabela();
-    carregarCompras();
-  });
-
-  // Carregar dados na tabela
-  function carregarTabela() {
-    clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    tabela.innerHTML = "";
-    
-    if (clientes.length === 0) {
-      tabela.innerHTML = `
-        <tr>
-          <td colspan="6" class="no-data">
-            Nenhum cliente cadastrado. Adicione seu primeiro cliente acima.
-          </td>
-        </tr>
-      `;
-      return;
-    }
-    
-    clientes.forEach((cliente, index) => {
-      const linha = document.createElement("tr");
-      linha.innerHTML = `
-        <td>${cliente.nome || '-'}</td>
-        <td>${formatarCPFExibicao(cliente.cpf) || '-'}</td>
-        <td>${formatarTelefoneExibicao(cliente.telefone) || '-'}</td>
-        <td>R$ ${parseFloat(cliente.total || 0).toFixed(2)}</td>
-        <td>${formatarDataExibicao(cliente.dataEntrega) || '-'}</td>
-        <td class="actions">
-          <button onclick="mostrarParcelas(${index})" class="btn-primary"><i class="fas fa-list"></i> Parcelas</button>
-          <button onclick="editarCliente(${index})" class="btn-success"><i class="fas fa-edit"></i> Editar</button>
-          <button onclick="exportarClientePDF(${index})" class="btn-info"><i class="fas fa-file-pdf"></i> PDF</button>
-          <button onclick="exportarClienteExcel(${index})" class="btn-success"><i class="fas fa-file-excel"></i> Excel</button>
-          <button onclick="excluirCliente(${index})" class="btn-danger"><i class="fas fa-trash"></i> Excluir</button>
-        </td>
-      `;
-      tabela.appendChild(linha);
-    });
-  }
-
-  // Carregar fichas de compra
-  function carregarCompras() {
-    clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    listaCompras.innerHTML = "";
-    
-    if (clientes.length === 0) {
-      listaCompras.innerHTML = `
-        <div class="no-data">
-          Nenhuma ficha de compra cadastrada.
+        
+        <!-- Slide 2 -->
+        <div class="slide">
+            <h1>
+                <span style="font-size: 1em;">UM DOS MAIORES ESTOQUES DE<br>TODO O NORDESTE</span><br>
+                <span style="color: var(--yellow); font-size: 1.8em;">SEM FALTAS</span><br>
+                <span style="font-size: 1em;">UM DOS ESTOQUES MAIS COMPLETOS<br>DE TODO O BRASIL</span>
+            </h1>
         </div>
-      `;
-      return;
-    }
-    
-    clientes.forEach((cliente, index) => {
-      if (!cliente.parcelasDetalhes || cliente.parcelasDetalhes.length === 0) return;
-      
-      const ficha = document.createElement('div');
-      ficha.className = 'ficha';
-      
-      // Calcular totais
-      const totalParcelas = cliente.parcelasDetalhes.reduce((sum, p) => sum + p.valor, 0);
-      const totalPago = cliente.parcelasDetalhes
-        .filter(p => p.status === 'Paga')
-        .reduce((sum, p) => sum + p.valor, 0);
-      const totalPendente = totalParcelas - totalPago;
-      
-      ficha.innerHTML = `
-        <div class="ficha-header">
-          <div class="ficha-title">${cliente.nome || 'Cliente'} - ${formatarCPFExibicao(cliente.cpf) || ''}</div>
-          <div class="ficha-date">Entrega: ${formatarDataExibicao(cliente.dataEntrega)}</div>
+        
+        <!-- Slide 3 -->
+        <div class="slide">
+            <h1>
+                <span style="font-size: 1em;">MARCAMOS PRESENÇA</span><br>
+                <span style="color: var(--yellow); font-size: 1.8em;">5 BASES EM<br>3 ESTADOS</span><br>
+                <span style="font-size: 1em;">PARA SER EXPRESS<br>ENCURTAMOS AS DISTÂNCIAS</span>
+            </h1>
         </div>
-        <div class="ficha-body">
-          <p><strong>Total:</strong> R$ ${(parseFloat(cliente.total) || 0).toFixed(2)}</p>
-          <p><strong>Entrada:</strong> R$ ${(parseFloat(cliente.entrada) || 0).toFixed(2)}</p>
-          <p><strong>Parcelas:</strong> ${cliente.parcelasDetalhes.length}x de R$ ${(parseFloat(cliente.valorParcela) || 0).toFixed(2)}</p>
-          <p><strong>Status:</strong> 
-            <span class="status-${totalPendente === 0 ? 'paga' : 'aberta'}">
-              ${totalPendente === 0 ? 'Quitado' : `${totalPago.toFixed(2)}/${totalParcelas.toFixed(2)}`}
-            </span>
-          </p>
-          
-          <h4 style="margin-top: 15px;">Detalhes das Parcelas:</h4>
-          <div style="max-height: 200px; overflow-y: auto;">
-            ${cliente.parcelasDetalhes.map(parcela => `
-              <div class="parcela" style="margin-bottom: 10px;">
-                <div>
-                  <strong>Parcela ${parcela.numero}</strong><br>
-                  <small>Vencimento: ${formatarDataExibicao(parcela.dataVencimento)}</small>
+        
+        <!-- Controles do Carrossel -->
+        <div class="carousel-controls">
+            <button class="carousel-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <!-- Navegação do Carrossel -->
+        <div class="carousel-nav">
+            <div class="carousel-dot active" data-slide="0"></div>
+            <div class="carousel-dot" data-slide="1"></div>
+            <div class="carousel-dot" data-slide="2"></div>
+        </div>
+    </section>
+    
+    <!-- Seção de Destaques Animalizada -->
+    <section class="highlights">
+        <div class="highlight-card">
+            <div class="highlight-card-content">
+                <div class="logo">HOYA</div>
+                <h2>HOYA</h2>
+                <p>Marca Japonesa, referência no mercado pelos melhores produtos e maiores desenvolvimentos do segmento óptico.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <div class="highlight-card-content">
+                <div class="logo">REVOLUTION</div>
+                <h2>REVOLUTION</h2>
+                <p>Marca Americana, detentora da maior abrangência e melhor relação custo-benefício do mercado óptico.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <div class="highlight-card-content">
+                <div class="logo"><i class="fas fa-eye"></i></div>
+                <h2>ESSILOR</h2>
+                <p>Marca Francesa, possui hoje o maior renome e reputação do segmento por seus produtos altamente difundidos.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <div class="highlight-card-content">
+                <div class="logo"><i class="fas fa-shipping-fast"></i></div>
+                <h2>IMPORTAÇÃO</h2>
+                <p>Seleção de produtos importados diretamente da China, Coreia, Índia e Indonésia. Os mais acessíveis e competitivos.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seção Logística -->
+    <section id="logistica" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">LOGÍSTICA EXPRESSA</h2>
+            <div class="section-content">
+                <p>Nossa rede logística abrange todo o Nordeste com 5 bases estratégicas para entrega rápida e eficiente. Com centros de distribuição em Juazeiro-BA, Senhor do Bonfim-BA, Jacobina-BA, Petrolina-PE e Juazeiro do Norte-CE, garantimos entregas expressas em todo o território nordestino.</p>
+                <p>Utilizamos tecnologia de ponta para rastreamento de pedidos e otimização de rotas, assegurando que seus produtos cheguem no prazo combinado, sem atrasos e com a qualidade que você merece.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seção Produtos -->
+    <section id="produtos" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">PRODUTOS PREMIUM</h2>
+            <div class="section-content">
+                <p>Oferecemos os melhores produtos ópticos das principais marcas nacionais e internacionais. Nossa linha inclui:</p>
+                <ul style="text-align: left; max-width: 600px; margin: 30px auto;">
+                    <li><i class="fas fa-check" style="color: var(--blue); margin-right: 10px;"></i> Lentes oftálmicas de última geração</li>
+                    <li><i class="fas fa-check" style="color: var(--blue); margin-right: 10px;"></i> Armações de alta qualidade</li>
+                    <li><i class="fas fa-check" style="color: var(--blue); margin-right: 10px;"></i> Lentes de contato das melhores marcas</li>
+                    <li><i class="fas fa-check" style="color: var(--blue); margin-right: 10px;"></i> Equipamentos para ópticas</li>
+                    <li><i class="fas fa-check" style="color: var(--blue); margin-right: 10px;"></i> Produtos de limpeza e manutenção</li>
+                </ul>
+                <p>Trabalhamos com as marcas HOYA, Essilor, Revolution e outras líderes de mercado, garantindo qualidade e procedência.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seção Quem Somos -->
+    <section id="quem-somos" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">QUEM SOMOS</h2>
+            <div class="section-content">
+                <p>O Lab Express é uma empresa comprometida com a excelência e velocidade no fornecimento de soluções ópticas. Com mais de 15 anos de experiência no mercado, nos tornamos referência no Nordeste pela qualidade de nossos produtos e agilidade em nossa logística.</p>
+                <p>Nossa missão é proporcionar aos nossos clientes acesso aos melhores produtos ópticos com a velocidade que só o Lab Express pode oferecer. Valorizamos a transparência, a ética e o compromisso com a satisfação total de nossos clientes.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seção Contato -->
+    <section id="contato" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">FALE CONOSCO</h2>
+            <div class="section-content">
+                <p>Entre em contato conosco para mais informações sobre nossos produtos e serviços. Nossa equipe está pronta para atendê-lo.</p>
+                <div style="margin-top: 40px; text-align: center;">
+                    <p style="margin-bottom: 15px;"><i class="fas fa-phone" style="color: var(--blue); margin-right: 10px;"></i> <strong>(74) 1234-5678</strong></p>
+                    <p style="margin-bottom: 15px;"><i class="fas fa-envelope" style="color: var(--blue); margin-right: 10px;"></i> <strong>contato@labexpress.com.br</strong></p>
+                    <p><i class="fas fa-map-marker-alt" style="color: var(--blue); margin-right: 10px;"></i> <strong>Av. Principal, 123 - Centro, Juazeiro-BA</strong></p>
                 </div>
-                <span>R$ ${parcela.valor.toFixed(2)}</span>
-                <span class="status-${parcela.status === 'Paga' ? 'paga' : (new Date(parcela.dataVencimento) < new Date() ? 'vencida' : 'aberta')}">
-                  ${parcela.status === 'Paga' ? 'Paga' : (new Date(parcela.dataVencimento) < new Date() ? 'Vencida' : 'Em aberto')}
-                </span>
-              </div>
-            `).join('')}
-          </div>
+            </div>
         </div>
-        <div class="ficha-footer">
-          <button onclick="mostrarParcelas(${index})" class="btn-primary"><i class="fas fa-edit"></i> Editar Parcelas</button>
+    </section>
+    
+    <!-- Seção CTA Animalizada -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>PROTEÇÃO REVOLUCIONÁRIA</h2>
+            <div class="shield-container">
+                <div class="shield-pulse"></div>
+                <i class="fas fa-shield-alt shield-icon"></i>
+            </div>
+            <p>O VERNIZ PROTETIVO MAIS AVANÇADO<br>DO MERCADO</p>
+            <button class="cta-btn">DESCUBRA MAIS</button>
         </div>
-      `;
-      
-      listaCompras.appendChild(ficha);
-    });
-  }
-
-  // Carregar exames
-  function carregarExames() {
-    exames = JSON.parse(localStorage.getItem('exames')) || [];
-    listaExames.innerHTML = "";
+    </section>
     
-    if (exames.length === 0) {
-      listaExames.innerHTML = `
-        <div class="no-data">
-          Nenhum exame agendado.
+    <!-- Footer Animalizado -->
+    <footer>
+        <div class="locations">
+            <div class="location">Juazeiro-BA</div>
+            <div class="location">Senhor do Bonfim-BA</div>
+            <div class="location">Jacobina-BA</div>
+            <div class="location">Petrolina-PE</div>
+            <div class="location">Juazeiro do Norte-CE</div>
         </div>
-      `;
-      return;
-    }
-    
-    // Ordenar exames por data (mais recente primeiro)
-    exames.sort((a, b) => new Date(b.data) - new Date(a.data));
-    
-    exames.forEach((exame, index) => {
-      const cliente = clientes.find(c => c.cpf === exame.cpfCliente) || {};
-      
-      const ficha = document.createElement('div');
-      ficha.className = 'ficha';
-      
-      ficha.innerHTML = `
-        <div class="ficha-header">
-          <div class="ficha-title">${cliente.nome || 'Cliente não encontrado'} - ${formatarCPFExibicao(exame.cpfCliente) || ''}</div>
-          <div class="ficha-date">${formatarDataHoraExibicao(exame.data)}</div>
+        
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
         </div>
-        <div class="ficha-body">
-          <p><strong>Tipo:</strong> ${exame.tipo}</p>
-          <p><strong>Valor:</strong> R$ ${parseFloat(exame.valor || 0).toFixed(2)}</p>
-          <p><strong>Status:</strong> 
-            <span class="exam-status status-${exame.status.toLowerCase()}">${exame.status}</span>
-            ${exame.status === 'Cancelado' ? `
-              <span class="exam-status status-${exame.reembolso === 'Concluído' ? 'reembolsado' : 
-                exame.reembolso === 'Vencido' ? 'vencido' : 'cancelado'}" style="margin-left: 5px;">
-                Reembolso: ${exame.reembolso || 'Pendente'}
-              </span>
-            ` : ''}
-          </p>
-          ${exame.observacoes ? `<p><strong>Observações:</strong> ${exame.observacoes}</p>` : ''}
-          ${exame.dataReembolso && exame.status === 'Cancelado' ? `
-            <p><strong>Data Reembolso:</strong> ${formatarDataExibicao(exame.dataReembolso)}</p>
-          ` : ''}
+        
+        <p class="copyright">&copy; 2023 Lab Express. Todos os direitos reservados.</p>
+    </footer>
+    
+    <!-- Atendente Virtual -->
+    <div class="virtual-assistant">
+        <div class="assistant-header">
+            <h3><i class="fas fa-robot"></i> Atendente Virtual</h3>
+            <button class="close-assistant"><i class="fas fa-times"></i></button>
         </div>
-        <div class="ficha-footer">
-          <button onclick="editarExame(${index})" class="btn-primary"><i class="fas fa-edit"></i> Editar</button>
-          <button onclick="excluirExame(${index})" class="btn-danger"><i class="fas fa-trash"></i> Excluir</button>
+        <div class="assistant-body">
+            <div class="assistant-message bot">
+                <div class="message-bubble">Olá! Sou o assistente virtual do Lab Express. Como posso te ajudar hoje?</div>
+                <div class="message-time">Agora</div>
+            </div>
         </div>
-      `;
-      
-      listaExames.appendChild(ficha);
-    });
-  }
+        <div class="assistant-input">
+            <input type="text" placeholder="Digite sua mensagem...">
+            <button class="send-message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <!-- Botão do WhatsApp -->
+    <a href="https://wa.me/5574999999999" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp"></i>
+        <div class="whatsapp-text">Fale conosco</div>
+    </a>
+    
+    <!-- Widget de Chat Animalizado -->
+    <div class="chat-widget" id="chat-widget">
+        <i class="fas fa-comment-dots"></i>
+        <div class="chat-text">Posso ajudar?</div>
+    </div>
+    
+    <script>
+        // Efeito de scroll no header
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Atualiza o menu ativo conforme scroll
+            updateActiveMenu();
+        });
 
-  // Mostrar detalhes das parcelas
-  function mostrarParcelas(index) {
-    const cliente = clientes[index];
-    clienteIndexAtual = index;
-    clienteSelecionado.innerText = cliente.nome || 'Cliente';
-    listaParcelas.innerHTML = "";
+        // Menu mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('show');
+        });
 
-    if (!cliente.parcelasDetalhes || cliente.parcelasDetalhes.length === 0) {
-      listaParcelas.innerHTML = '<p class="no-data">Nenhuma parcela cadastrada para este cliente.</p>';
-    } else {
-      cliente.parcelasDetalhes.forEach((parcela, i) => {
-        const div = document.createElement('div');
-        div.className = 'parcela';
-        div.innerHTML = `
-          <div>
-            <strong>Parcela ${parcela.numero}</strong><br>
-            <small>Vencimento: ${formatarDataExibicao(parcela.dataVencimento)}</small>
-          </div>
-          <span>R$ ${parcela.valor.toFixed(2)}</span>
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <select data-index="${i}" style="width: 120px;">
-              <option value="Em aberto" ${parcela.status === 'Em aberto' ? 'selected' : ''}>Em aberto</option>
-              <option value="Paga" ${parcela.status === 'Paga' ? 'selected' : ''}>Paga</option>
-            </select>
-            <input type="date" data-index="${i}" value="${parcela.dataPagamento || ''}" style="width: 140px;">
-          </div>
-          <span class="status-${parcela.status === 'Paga' ? 'paga' : (new Date(parcela.dataVencimento) < new Date() ? 'vencida' : 'aberta')}">
-            ${parcela.status === 'Paga' ? 'Paga' : (new Date(parcela.dataVencimento) < new Date() ? 'Vencida' : 'Em aberto')}
-          </span>
-        `;
-        listaParcelas.appendChild(div);
-      });
-    }
+        // Fecha o menu mobile ao clicar em um link
+        document.querySelectorAll('nav ul li a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    mainNav.classList.remove('show');
+                }
+                
+                // Remove a classe active de todos os links
+                document.querySelectorAll('nav ul li a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Adiciona a classe active no link clicado
+                link.classList.add('active');
+            });
+        });
 
-    detalhes.style.display = 'block';
-    window.scrollTo({ top: detalhes.offsetTop, behavior: 'smooth' });
-  }
+        // Atualiza o menu ativo conforme scroll
+        function updateActiveMenu() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}` || (current === '' && link.getAttribute('href') === '#')) {
+                    link.classList.add('active');
+                }
+            });
+        }
 
-  // Salvar alterações nas parcelas
-  function salvarParcelas() {
-    const cliente = clientes[clienteIndexAtual];
-    const selects = listaParcelas.querySelectorAll('select');
-    const datas = listaParcelas.querySelectorAll('input[type="date"]');
-
-    selects.forEach(select => {
-      const i = parseInt(select.getAttribute('data-index'));
-      cliente.parcelasDetalhes[i].status = select.value;
-    });
-
-    datas.forEach(input => {
-      const i = parseInt(input.getAttribute('data-index'));
-      cliente.parcelasDetalhes[i].dataPagamento = input.value;
-    });
-
-    localStorage.setItem('clientes', JSON.stringify(clientes));
-    mostrarToast('Parcelas atualizadas com sucesso!', 'success');
-    fecharDetalhes();
-    carregarTabela();
-    carregarCompras();
-  }
-
-  // Notificar cliente via WhatsApp
-  function notificarCliente() {
-    const cliente = clientes[clienteIndexAtual];
-    const whatsapp = cliente.whatsapp || cliente.telefone;
-    
-    if (!whatsapp) {
-      mostrarToast('Nenhum WhatsApp cadastrado para este cliente!', 'error');
-      return;
-    }
-    
-    const numero = whatsapp.replace(/\D/g, '');
-    const parcelasAbertas = cliente.parcelasDetalhes.filter(p => p.status === 'Em aberto');
-    const parcelasPagas = cliente.parcelasDetalhes.filter(p => p.status === 'Paga');
-    
-    let mensagem = `Olá ${cliente.nome}, aqui é da Óticas Prismax!\n\n`;
-    mensagem += `Segue o status das suas parcelas:\n\n`;
-    
-    if (parcelasAbertas.length > 0) {
-      mensagem += `*Parcelas em aberto:*\n`;
-      parcelasAbertas.forEach(p => {
-        mensagem += `- Parcela ${p.numero}: R$ ${p.valor.toFixed(2)} (Vencimento: ${formatarDataExibicao(p.dataVencimento)})\n`;
-      });
-      mensagem += `\n`;
-    }
-    
-    if (parcelasPagas.length > 0) {
-      mensagem += `*Parcelas pagas:*\n`;
-      parcelasPagas.forEach(p => {
-        mensagem += `- Parcela ${p.numero}: R$ ${p.valor.toFixed(2)} (Paga em: ${formatarDataExibicao(p.dataPagamento)})\n`;
-      });
-    }
-    
-    mensagem += `\nQualquer dúvida estamos à disposição!`;
-    
-    const url = `https://wa.me/55${numero}?text=${encodeURIComponent(mensagem)}`;
-    window.open(url, '_blank');
-  }
-
-  // Exportar cliente individual como PDF
-  function exportarClientePDF(index) {
-    const cliente = clientes[index];
-    
-    // Cria um novo documento PDF
-    const doc = new jsPDF();
-    
-    // Adiciona título
-    doc.setFontSize(18);
-    doc.setTextColor(0, 102, 204);
-    doc.text(`Ficha do Cliente - ${cliente.nome}`, 105, 15, { align: 'center' });
-    
-    // Adiciona data
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(`Emitido em: ${new Date().toLocaleDateString()}`, 105, 22, { align: 'center' });
-    
-    // Adiciona linha
-    doc.setDrawColor(0, 102, 204);
-    doc.setLineWidth(0.5);
-    doc.line(20, 25, 190, 25);
-    
-    // Dados do cliente
-    let y = 35;
-    doc.setFontSize(12);
-    doc.setTextColor(0);
-    
-    // Informações básicas
-    doc.text(`Nome: ${cliente.nome || '-'}`, 20, y);
-    doc.text(`CPF: ${formatarCPFExibicao(cliente.cpf) || '-'}`, 20, y + 10);
-    doc.text(`Telefone: ${formatarTelefoneExibicao(cliente.telefone) || '-'}`, 20, y + 20);
-    doc.text(`WhatsApp: ${formatarTelefoneExibicao(cliente.whatsapp) || '-'}`, 20, y + 30);
-    
-    // Endereço
-    doc.text(`Endereço: ${cliente.rua || ''}, ${cliente.numero || ''}`, 20, y + 40);
-    doc.text(`Bairro: ${cliente.bairro || '-'}`, 20, y + 50);
-    doc.text(`Cidade: ${cliente.cidade || '-'}/${cliente.uf || '-'}`, 20, y + 60);
-    doc.text(`CEP: ${formatarCEPExibicao(cliente.cep) || '-'}`, 20, y + 70);
-    doc.text(`Referência: ${cliente.referencia || '-'}`, 20, y + 80);
-    
-    // Informações financeiras
-    doc.text(`Entrada: R$ ${parseFloat(cliente.entrada || 0).toFixed(2)}`, 20, y + 90);
-    doc.text(`Parcelas: ${cliente.parcelas || 0}x de R$ ${parseFloat(cliente.valorParcela || 0).toFixed(2)}`, 20, y + 100);
-    doc.text(`Total: R$ ${parseFloat(cliente.total || 0).toFixed(2)}`, 20, y + 110);
-    doc.text(`1ª Parcela: ${formatarDataExibicao(cliente.primeiraParcela) || '-'}`, 20, y + 120);
-    doc.text(`Data de Entrega: ${formatarDataExibicao(cliente.dataEntrega) || '-'}`, 20, y + 130);
-    
-    // Verifica se precisa de uma nova página para as parcelas
-    if (cliente.parcelasDetalhes && cliente.parcelasDetalhes.length > 0) {
-      doc.addPage();
-      y = 20;
-      doc.setFontSize(14);
-      doc.text('Detalhes das Parcelas', 105, y, { align: 'center' });
-      y += 10;
-      
-      cliente.parcelasDetalhes.forEach((parcela, i) => {
-        if (y > 250) { // Se estiver no final da página, adiciona uma nova
-          doc.addPage();
-          y = 20;
+        // Carrossel Aprimorado
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const rocket = document.querySelector('.rocket');
+        let slideInterval;
+        
+        function showSlide(n) {
+            // Esconde todos os slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.opacity = '0';
+            });
+            
+            // Remove a classe active de todos os dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Atualiza o slide atual
+            currentSlide = (n + slides.length) % slides.length;
+            
+            // Mostra o slide atual
+            slides[currentSlide].classList.add('active');
+            setTimeout(() => {
+                slides[currentSlide].style.opacity = '1';
+            }, 10);
+            
+            // Ativa o dot correspondente
+            dots[currentSlide].classList.add('active');
+            
+            // Move o foguete aleatoriamente
+            moveRocket();
         }
         
-        doc.setFontSize(10);
-        doc.text(`Parcela ${parcela.numero}:`, 20, y);
-        doc.text(`Valor: R$ ${parcela.valor.toFixed(2)}`, 60, y);
-        doc.text(`Vencimento: ${formatarDataExibicao(parcela.dataVencimento)}`, 100, y);
-        doc.text(`Status: ${parcela.status}`, 150, y);
-        
-        if (parcela.dataPagamento) {
-          doc.text(`Pagamento: ${formatarDataExibicao(parcela.dataPagamento)}`, 180, y);
+        function nextSlide() {
+            showSlide(currentSlide + 1);
         }
         
-        y += 10;
-      });
-    }
-    
-    // Salva o PDF com o nome do cliente
-    const nomeArquivo = `cliente_${cliente.nome.replace(/\s+/g, '_')}.pdf`;
-    doc.save(nomeArquivo);
-    mostrarToast('PDF do cliente gerado com sucesso!', 'success');
-  }
-
-  // Exportar cliente individual como Excel
-  function exportarClienteExcel(index) {
-    const cliente = clientes[index];
-    
-    // Cria um array com os dados do cliente
-    const dadosCliente = [
-      ['Nome', cliente.nome || ''],
-      ['CPF', formatarCPFExibicao(cliente.cpf) || ''],
-      ['Telefone', formatarTelefoneExibicao(cliente.telefone) || ''],
-      ['WhatsApp', formatarTelefoneExibicao(cliente.whatsapp) || ''],
-      ['Endereço', `${cliente.rua || ''}, ${cliente.numero || ''}`],
-      ['Bairro', cliente.bairro || ''],
-      ['Cidade/UF', `${cliente.cidade || ''}/${cliente.uf || ''}`],
-      ['CEP', formatarCEPExibicao(cliente.cep) || ''],
-      ['Referência', cliente.referencia || ''],
-      ['Entrada (R$)', parseFloat(cliente.entrada || 0).toFixed(2)],
-      ['Parcelas', cliente.parcelas || 0],
-      ['Valor Parcela (R$)', parseFloat(cliente.valorParcela || 0).toFixed(2)],
-      ['Total (R$)', parseFloat(cliente.total || 0).toFixed(2)],
-      ['1ª Parcela', formatarDataExibicao(cliente.primeiraParcela) || ''],
-      ['Data Entrega', formatarDataExibicao(cliente.dataEntrega) || ''],
-      ['Assinatura', cliente.assinatura || ''],
-      ['Notificar WhatsApp', cliente.notificarWhatsapp ? 'Sim' : 'Não']
-    ];
-    
-    // Adiciona as parcelas se existirem
-    if (cliente.parcelasDetalhes && cliente.parcelasDetalhes.length > 0) {
-      dadosCliente.push(['', '']);
-      dadosCliente.push(['Parcelas', 'Valor', 'Vencimento', 'Status', 'Data Pagamento']);
-      
-      cliente.parcelasDetalhes.forEach(parcela => {
-        dadosCliente.push([
-          `Parcela ${parcela.numero}`,
-          `R$ ${parcela.valor.toFixed(2)}`,
-          formatarDataExibicao(parcela.dataVencimento),
-          parcela.status,
-          parcela.dataPagamento ? formatarDataExibicao(parcela.dataPagamento) : ''
-        ]);
-      });
-    }
-    
-    // Cria a planilha
-    const ws = XLSX.utils.aoa_to_sheet(dadosCliente);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Cliente");
-    
-    // Salva o arquivo com o nome do cliente
-    const nomeArquivo = `cliente_${cliente.nome.replace(/\s+/g, '_')}.xlsx`;
-    XLSX.writeFile(wb, nomeArquivo);
-    mostrarToast('Excel do cliente gerado com sucesso!', 'success');
-  }
-
-  // Fechar detalhes das parcelas
-  function fecharDetalhes() {
-    detalhes.style.display = 'none';
-  }
-
-  // Excluir cliente
-  function excluirCliente(index) {
-    if (confirm("Tem certeza que deseja excluir este cliente e todas as suas parcelas?")) {
-      clientes.splice(index, 1);
-      localStorage.setItem('clientes', JSON.stringify(clientes));
-      mostrarToast('Cliente excluído com sucesso!', 'success');
-      carregarTabela();
-      carregarCompras();
-    }
-  }
-
-  // Editar cliente
-  function editarCliente(index) {
-    const cliente = clientes[index];
-    for (const key in cliente) {
-      if (form.elements[key]) {
-        form.elements[key].value = cliente[key] || '';
-      }
-    }
-    
-    // Checkbox de notificação WhatsApp
-    if (form.elements['notificarWhatsapp']) {
-      form.elements['notificarWhatsapp'].checked = cliente.notificarWhatsapp || false;
-    }
-    
-    clientes.splice(index, 1);
-    localStorage.setItem('clientes', JSON.stringify(clientes));
-    mostrarToast('Preencha os dados para edição', 'info');
-    window.scrollTo({ top: form.offsetTop, behavior: 'smooth' });
-  }
-
-  // Filtrar clientes na tabela
-  function filtrarClientes() {
-    const termo = document.getElementById('buscaCliente').value.toLowerCase();
-    const linhas = tabela.querySelectorAll('tr');
-    
-    linhas.forEach(linha => {
-      if (linha.querySelector('.no-data')) return;
-      
-      const textoLinha = linha.textContent.toLowerCase();
-      linha.style.display = textoLinha.includes(termo) ? '' : 'none';
-    });
-  }
-
-  // Filtrar compras
-  function filtrarCompras() {
-    const termo = document.getElementById('buscaCompras').value.toLowerCase();
-    const fichas = listaCompras.querySelectorAll('.ficha');
-    
-    fichas.forEach(ficha => {
-      const textoFicha = ficha.textContent.toLowerCase();
-      ficha.style.display = textoFicha.includes(termo) ? '' : 'none';
-    });
-  }
-
-  // Filtrar exames
-  function filtrarExames() {
-    const termo = document.getElementById('buscaExames').value.toLowerCase();
-    const fichas = listaExames.querySelectorAll('.ficha');
-    
-    fichas.forEach(ficha => {
-      const textoFicha = ficha.textContent.toLowerCase();
-      ficha.style.display = textoFicha.includes(termo) ? '' : 'none';
-    });
-  }
-
-  // Abrir modal de exame
-  function abrirModalExame() {
-    exameEditando = null;
-    document.getElementById('modalExameTitulo').textContent = 'Novo Exame';
-    document.getElementById('exameCliente').innerHTML = '<option value="">Selecione um cliente</option>';
-    
-    // Preencher dropdown de clientes
-    clientes.forEach(cliente => {
-      const option = document.createElement('option');
-      option.value = cliente.cpf;
-      option.textContent = `${cliente.nome} - ${formatarCPFExibicao(cliente.cpf)}`;
-      document.getElementById('exameCliente').appendChild(option);
-    });
-    
-    // Resetar formulário
-    document.getElementById('exameTipo').value = '';
-    document.getElementById('exameData').value = '';
-    document.getElementById('exameValor').value = '10.00';
-    document.getElementById('exameObservacoes').value = '';
-    document.querySelector('input[name="exameStatus"][value="Agendado"]').checked = true;
-    document.getElementById('exameReembolso').value = 'Pendente';
-    document.getElementById('exameDataReembolso').value = '';
-    document.getElementById('reembolsoGroup').style.display = 'none';
-    
-    // Definir data/hora padrão (próxima hora redonda)
-    const now = new Date();
-    const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0);
-    document.getElementById('exameData').value = nextHour.toISOString().slice(0, 16);
-    
-    modalExame.style.display = 'flex';
-  }
-
-  // Fechar modal de exame
-  function fecharModalExame() {
-    modalExame.style.display = 'none';
-  }
-
-  // Editar exame
-  function editarExame(index) {
-    exameEditando = index;
-    const exame = exames[index];
-    
-    document.getElementById('modalExameTitulo').textContent = 'Editar Exame';
-    document.getElementById('exameCliente').innerHTML = '<option value="">Selecione um cliente</option>';
-    
-    // Preencher dropdown de clientes
-    clientes.forEach(cliente => {
-      const option = document.createElement('option');
-      option.value = cliente.cpf;
-      option.textContent = `${cliente.nome} - ${formatarCPFExibicao(cliente.cpf)}`;
-      option.selected = cliente.cpf === exame.cpfCliente;
-      document.getElementById('exameCliente').appendChild(option);
-    });
-    
-    // Preencher dados do exame
-    document.getElementById('exameTipo').value = exame.tipo;
-    document.getElementById('exameData').value = exame.data.replace(' ', 'T');
-    document.getElementById('exameValor').value = exame.valor;
-    document.getElementById('exameObservacoes').value = exame.observacoes || '';
-    document.querySelector(`input[name="exameStatus"][value="${exame.status}"]`).checked = true;
-    
-    if (exame.status === 'Cancelado') {
-      document.getElementById('exameReembolso').value = exame.reembolso || 'Pendente';
-      document.getElementById('exameDataReembolso').value = exame.dataReembolso || '';
-      document.getElementById('reembolsoGroup').style.display = 'block';
-    } else {
-      document.getElementById('reembolsoGroup').style.display = 'none';
-    }
-    
-    modalExame.style.display = 'flex';
-  }
-
-  // Salvar exame
-  function salvarExame() {
-    const cpfCliente = document.getElementById('exameCliente').value;
-    const tipo = document.getElementById('exameTipo').value;
-    const data = document.getElementById('exameData').value;
-    const valor = document.getElementById('exameValor').value;
-    const observacoes = document.getElementById('exameObservacoes').value;
-    const status = document.querySelector('input[name="exameStatus"]:checked').value;
-    const reembolso = status === 'Cancelado' ? document.getElementById('exameReembolso').value : null;
-    const dataReembolso = status === 'Cancelado' ? document.getElementById('exameDataReembolso').value : null;
-    
-    if (!cpfCliente || !tipo || !data || !valor) {
-      mostrarToast('Preencha todos os campos obrigatórios!', 'error');
-      return;
-    }
-    
-    const exame = {
-      cpfCliente,
-      tipo,
-      data: data.replace('T', ' '),
-      valor: parseFloat(valor),
-      observacoes,
-      status,
-      reembolso,
-      dataReembolso
-    };
-    
-    if (exameEditando !== null) {
-      exames[exameEditando] = exame;
-    } else {
-      exames.push(exame);
-    }
-    
-    localStorage.setItem('exames', JSON.stringify(exames));
-    mostrarToast('Exame salvo com sucesso!', 'success');
-    fecharModalExame();
-    carregarExames();
-  }
-
-  // Excluir exame
-  function excluirExame(index) {
-    if (confirm("Tem certeza que deseja excluir este exame?")) {
-      exames.splice(index, 1);
-      localStorage.setItem('exames', JSON.stringify(exames));
-      mostrarToast('Exame excluído com sucesso!', 'success');
-      carregarExames();
-    }
-  }
-
-  // Exportar para Excel
-  function exportarExcel() {
-    if (clientes.length === 0) {
-      mostrarToast('Nenhum cliente para exportar!', 'error');
-      return;
-    }
-
-    const planilha = clientes.map(cliente => {
-      const parcelasInfo = cliente.parcelasDetalhes 
-        ? cliente.parcelasDetalhes.map(p => `Parcela ${p.numero}: R$ ${p.valor.toFixed(2)} (Venc: ${formatarDataExibicao(p.dataVencimento)}, ${p.status})`).join('; ')
-        : 'Sem parcelas';
-        
-      return {
-        'Nome': cliente.nome || '',
-        'CPF': formatarCPFExibicao(cliente.cpf) || '',
-        'Telefone': formatarTelefoneExibicao(cliente.telefone) || '',
-        'WhatsApp': formatarTelefoneExibicao(cliente.whatsapp) || '',
-        'Endereço': `${cliente.rua || ''}, ${cliente.numero || ''} - ${cliente.bairro || ''}, ${cliente.cidade || ''}/${cliente.uf || ''}`,
-        'CEP': formatarCEPExibicao(cliente.cep) || '',
-        'Referência': cliente.referencia || '',
-        'Entrada (R$)': parseFloat(cliente.entrada || 0).toFixed(2),
-        'Parcelas': cliente.parcelas || 0,
-        'Valor Parcela (R$)': parseFloat(cliente.valorParcela || 0).toFixed(2),
-        'Total (R$)': parseFloat(cliente.total || 0).toFixed(2),
-        '1ª Parcela': formatarDataExibicao(cliente.primeiraParcela) || '',
-        'Data Entrega': formatarDataExibicao(cliente.dataEntrega) || '',
-        'Assinatura': cliente.assinatura || '',
-        'Notificar WhatsApp': cliente.notificarWhatsapp ? 'Sim' : 'Não',
-        'Detalhes Parcelas': parcelasInfo
-      };
-    });
-
-    const ws = XLSX.utils.json_to_sheet(planilha);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Clientes");
-    XLSX.writeFile(wb, "clientes_oticaprismax.xlsx");
-    mostrarToast('Exportação para Excel concluída!', 'success');
-  }
-
-  // Exportar para PDF
-  function exportarPDF() {
-    if (clientes.length === 0) {
-      mostrarToast('Nenhum cliente para exportar!', 'error');
-      return;
-    }
-
-    // Cria um novo documento PDF
-    const doc = new jsPDF();
-    
-    // Adiciona título
-    doc.setFontSize(18);
-    doc.setTextColor(0, 102, 204);
-    doc.text('Relatório de Clientes - Óticas Prismax', 105, 15, { align: 'center' });
-    
-    // Adiciona data
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 105, 22, { align: 'center' });
-    
-    // Adiciona linha
-    doc.setDrawColor(0, 102, 204);
-    doc.setLineWidth(0.5);
-    doc.line(20, 25, 190, 25);
-    
-    // Configurações da tabela
-    const columns = [
-      { header: 'Nome', dataKey: 'nome' },
-      { header: 'CPF', dataKey: 'cpf' },
-      { header: 'Telefone', dataKey: 'telefone' },
-      { header: 'Total', dataKey: 'total' },
-      { header: 'Entrega', dataKey: 'dataEntrega' }
-    ];
-    
-    const rows = clientes.map(cliente => ({
-      nome: cliente.nome || '-',
-      cpf: formatarCPFExibicao(cliente.cpf) || '-',
-      telefone: formatarTelefoneExibicao(cliente.telefone) || '-',
-      total: `R$ ${parseFloat(cliente.total || 0).toFixed(2)}`,
-      dataEntrega: formatarDataExibicao(cliente.dataEntrega) || '-'
-    }));
-    
-    // Adiciona tabela
-    doc.autoTable({
-      head: [columns.map(col => col.header)],
-      body: rows.map(row => columns.map(col => row[col.dataKey])),
-      startY: 30,
-      styles: {
-        fontSize: 9,
-        cellPadding: 3,
-        overflow: 'linebreak'
-      },
-      headStyles: {
-        fillColor: [0, 102, 204],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      alternateRowStyles: {
-        fillColor: [240, 240, 240]
-      }
-    });
-    
-    // Salva o PDF
-    doc.save('clientes_oticaprismax.pdf');
-    mostrarToast('Exportação para PDF concluída!', 'success');
-  }
-
-  // Calcular total automaticamente
-  function calcularTotal() {
-    const entrada = parseFloat(document.getElementById('entrada').value) || 0;
-    const parcelas = parseInt(document.getElementById('parcelas').value) || 0;
-    const valorParcela = parseFloat(document.getElementById('valorParcela').value) || 0;
-    
-    const total = entrada + (parcelas * valorParcela);
-    document.getElementById('total').value = total.toFixed(2);
-  }
-
-  // Buscar CEP via API ViaCEP
-  function buscarCEP() {
-    const cep = document.getElementById('cep').value.replace(/\D/g, '');
-    
-    if (cep.length !== 8) {
-      mostrarToast('CEP inválido! Deve conter 8 dígitos.', 'error');
-      return;
-    }
-    
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.erro) {
-          mostrarToast('CEP não encontrado!', 'error');
-          return;
+        function prevSlide() {
+            showSlide(currentSlide - 1);
         }
         
-        document.getElementById('rua').value = data.logradouro || '';
-        document.getElementById('bairro').value = data.bairro || '';
-        document.getElementById('cidade').value = data.localidade || '';
-        document.getElementById('uf').value = data.uf || '';
+        function moveRocket() {
+            const x = Math.random() * 30 - 15;
+            const y = Math.random() * 30 - 15;
+            const rotation = Math.random() * 15 - 7.5;
+            
+            rocket.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+        }
         
-        // Focar no campo número após preencher o endereço
-        document.getElementById('numero').focus();
+        // Inicia o carrossel automático
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
         
-        mostrarToast('Endereço preenchido automaticamente!', 'success');
-      })
-      .catch(error => {
-        console.error('Erro ao buscar CEP:', error);
-        mostrarToast('Erro ao buscar CEP. Tente novamente.', 'error');
-      });
-  }
+        // Para o carrossel automático
+        function pauseSlideShow() {
+            clearInterval(slideInterval);
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            pauseSlideShow();
+            startSlideShow();
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            pauseSlideShow();
+            startSlideShow();
+        });
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const slideIndex = parseInt(dot.getAttribute('data-slide'));
+                showSlide(slideIndex);
+                pauseSlideShow();
+                startSlideShow();
+            });
+        });
+        
+        // Pausa o carrossel quando o mouse está sobre ele
+        const heroSection = document.querySelector('.hero');
+        heroSection.addEventListener('mouseenter', pauseSlideShow);
+        heroSection.addEventListener('mouseleave', startSlideShow);
+        
+        // Inicialização
+        showSlide(0);
+        startSlideShow();
+        moveRocket(); // Posição inicial do foguete
 
-  // Mostrar notificação toast
-  function mostrarToast(mensagem, tipo) {
-    toastMessage.textContent = mensagem;
-    toast.className = 'toast show';
-    
-    // Cor baseada no tipo
-    if (tipo === 'error') {
-      toast.style.backgroundColor = 'var(--danger-color)';
-      toast.querySelector('.toast-icon').textContent = '✕';
-    } else if (tipo === 'success') {
-      toast.style.backgroundColor = 'var(--success-color)';
-      toast.querySelector('.toast-icon').textContent = '✓';
-    } else {
-      toast.style.backgroundColor = 'var(--info-color)';
-      toast.querySelector('.toast-icon').textContent = 'i';
-    }
-    
-    setTimeout(() => {
-      toast.className = 'toast';
-    }, 3000);
-  }
+        // Suaviza o scroll para as seções
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
 
-  // Formatar CPF para exibição
-  function formatarCPFExibicao(cpf) {
-    if (!cpf) return '';
-    const numeros = cpf.replace(/\D/g, '');
-    return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-  }
+        // Atendente Virtual
+        const chatWidget = document.getElementById('chat-widget');
+        const virtualAssistant = document.querySelector('.virtual-assistant');
+        const closeAssistant = document.querySelector('.close-assistant');
+        const sendMessageBtn = document.querySelector('.send-message');
+        const messageInput = document.querySelector('.assistant-input input');
+        const assistantBody = document.querySelector('.assistant-body');
+        
+        chatWidget.addEventListener('click', () => {
+            virtualAssistant.classList.toggle('active');
+        });
+        
+        closeAssistant.addEventListener('click', () => {
+            virtualAssistant.classList.remove('active');
+        });
+        
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'assistant-message bot';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${text}</div>
+                <div class="message-time">Agora</div>
+            `;
+            assistantBody.appendChild(messageDiv);
+            assistantBody.scrollTop = assistantBody.scrollHeight;
+        }
+        
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'assistant-message user';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${text}</div>
+                <div class="message-time">Agora</div>
+            `;
+            assistantBody.appendChild(messageDiv);
+            assistantBody.scrollTop = assistantBody.scrollHeight;
+        }
+        
+        sendMessageBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                messageInput.value = '';
+                
+                // Resposta automática do bot
+                setTimeout(() => {
+                    const responses = [
+                        "Entendi sua dúvida. Um de nossos atendentes já foi notificado e entrará em contato em breve.",
+                        "Ótima pergunta! Vou verificar isso para você.",
+                        "Para melhor atendê-lo, você poderia informar seu número de telefone?",
+                        "Estamos aqui para ajudar. Você gostaria de agendar uma visita em uma de nossas unidades?",
+                        "Obrigado pelo contato! Como posso te ajudar hoje?"
+                    ];
+                    
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addBotMessage(randomResponse);
+                }, 1000);
+            }
+        });
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessageBtn.click();
+            }
+        });
 
-  // Formatar telefone para exibição
-  function formatarTelefoneExibicao(telefone) {
-    if (!telefone) return '';
-    const numeros = telefone.replace(/\D/g, '');
-    
-    if (numeros.length === 11) {
-      return numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    } else if (numeros.length === 10) {
-      return numeros.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    }
-    return telefone;
-  }
-
-  // Formatar CEP para exibição
-  function formatarCEPExibicao(cep) {
-    if (!cep) return '';
-    const numeros = cep.replace(/\D/g, '');
-    return numeros.replace(/(\d{5})(\d{3})/, '$1-$2');
-  }
-
-  // Formatar data para exibição
-  function formatarDataExibicao(data) {
-    if (!data) return '';
-    const date = new Date(data);
-    return date.toLocaleDateString('pt-BR');
-  }
-
-  // Formatar data e hora para exibição
-  function formatarDataHoraExibicao(dataHora) {
-    if (!dataHora) return '';
-    const date = new Date(dataHora.replace(' ', 'T'));
-    return date.toLocaleString('pt-BR');
-  }
-
-  // Formatar CPF durante a digitação
-  function formatarCPF(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 11) value = value.substring(0, 11);
-    
-    if (value.length > 9) {
-      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    } else if (value.length > 6) {
-      value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
-    } else if (value.length > 3) {
-      value = value.replace(/(\d{3})(\d{3})/, '$1.$2');
-    }
-    
-    input.value = value;
-  }
-
-  // Formatar telefone durante a digitação
-  function formatarTelefone(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 11) value = value.substring(0, 11);
-    
-    if (value.length > 10) {
-      value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    } else if (value.length > 6) {
-      value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    } else if (value.length > 2) {
-      value = value.replace(/(\d{2})(\d{4})/, '($1) $2');
-    } else if (value.length > 0) {
-      value = value.replace(/(\d{2})/, '($1)');
-    }
-    
-    input.value = value;
-  }
-
-  // Formatar CEP durante a digitação
-  function formatarCEP(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 8) value = value.substring(0, 8);
-    
-    if (value.length > 5) {
-      value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
-    }
-    
-    input.value = value;
-  }
-</script>
+        // Inicializa o atendente com uma mensagem após 10 segundos
+        setTimeout(() => {
+            if (!virtualAssistant.classList.contains('active')) {
+                addBotMessage("Estou aqui para te ajudar! Clique no ícone de chat se precisar de algo.");
+            }
+        }, 10000);
+    </script>
 </body>
 </html>
